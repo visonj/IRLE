@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Internally Referenced Low-Light Enhancement</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #3273dc;
+      --text-main: #222222;
+      --text-muted: #666666;
+    }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+      background-color: #ffffff;
+    }
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Google Sans', sans-serif;
+      color: #111111;
+    }
+
+    /* Seamless Section Backgrounds */
+    .bg-white { background-color: #ffffff; }
+    .bg-light { background-color: #f9f9fb; border-top: 1px solid #f1f1f1; border-bottom: 1px solid #f1f1f1; }
+
+    /* Hero Section */
+    .hero { padding: 5rem 0 3rem 0; }
+    .publication-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+    }
+    .publication-authors { font-size: 1.25rem; margin-bottom: 0.5rem; font-weight: 500; }
+    .author-block { display: inline-block; margin: 0 10px; }
+    .author-block a { color: var(--accent-color); transition: color 0.2s; }
+    .author-block a:hover { color: #1a4a90; }
+    .institution-block { font-size: 1.1rem; color: var(--text-muted); }
+
+    /* Content Layout */
+    .section { padding: 4rem 1.5rem; }
+    .container.is-max-desktop { max-width: 1000px; }
+    
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .content { text-align: justify; }
+    .content p { font-size: 1.1rem; text-align: justify; }
+    .content ul { font-size: 1.05rem; }
+    .content li { margin-bottom: 0.5rem; text-align: justify; }
+
+    /* Images and Captions */
+    .img-fluid { width: 100%; border-radius: 4px; }
+    .figure-caption {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 1.2rem;
+      text-align: justify;
+      line-height: 1.5;
+    }
+    .table-caption {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin: 1.25rem 0 -0.35rem 0;
+      text-align: justify;
+      line-height: 1.5;
+    }
+
+    /* Interactive Grid Images */
+    .grid-item { text-align: center; margin-bottom: 1rem; }
+    .grid-item img {
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: crosshair;
+      width: 100%;
+    }
+    .grid-item img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      z-index: 10;
+      position: relative;
+    }
+    .grid-caption { font-size: 0.85rem; margin-top: 0.5rem; color: #444; }
+
+    /* Table Styling */
+    .table-container { overflow-x: auto; margin-top: 1rem; }
+    .table th { background-color: transparent; color: #111; font-weight: 700; vertical-align: middle; border-bottom: 2px solid #ddd; }
+    .table td { vertical-align: middle; transition: background-color 0.2s; border-bottom: 1px solid #eee; }
+    .table tbody tr:hover td { background-color: #f5f8ff; }
+    .quant-table { width: 100%; min-width: 0; font-size: 0.72rem; table-layout: fixed; }
+    .quant-table th, .quant-table td { padding: 0.3rem 0.2rem; white-space: nowrap; }
+    .quant-table thead th {
+      border-bottom: 0 !important;
+      position: relative;
+      text-align: center !important;
+    }
+    .quant-table .header-rule {
+      background-image: linear-gradient(#dddddd, #dddddd);
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      background-size: calc(100% - 14px) 2px;
+    }
+    .quant-table .metric-name-row th,
+    .quant-table .method-head {
+      border-bottom: 2px solid #dddddd !important;
+    }
+    .quant-table .method-head { width: 112px; }
+    .metric-boundary { border-right: 1px solid #eee; }
+    .method-cell {
+      width: 112px;
+      max-width: 112px;
+      line-height: 1.15;
+      white-space: normal !important;
+      overflow: visible;
+      text-overflow: clip;
+    }
+    .efficiency-table { width: 100%; min-width: 0; font-size: 0.92rem; table-layout: fixed; }
+    .efficiency-table th,
+    .efficiency-table td { text-align: center !important; }
+    .efficiency-table thead th { text-align: center !important; }
+    .efficiency-table tbody td:first-child { font-weight: 400; }
+    .efficiency-table tbody td.has-text-left { text-align: left !important; }
+    .efficiency-table .is-ours td:first-child { font-weight: 700; }
+    .is-ours { background-color: #fcfcfc; }
+    .is-best { font-weight: 700; color: #000; }
+    .is-second { color: #000; font-weight: 400; text-decoration: underline; }
+    .visual-case { margin-bottom: 1.4rem; }
+    .visual-case .columns { margin-bottom: -0.55rem; }
+    .visual-case .columns + .columns { margin-top: -0.25rem; }
+    .visual-case .column { padding-top: 0.12rem; padding-bottom: 0.12rem; }
+    .visual-case .grid-item { margin-bottom: 0; }
+    .visual-case .grid-caption { margin-top: 0.08rem; line-height: 1.2; }
+    .visual-case .figure-caption { margin-top: 0.65rem; }
+  </style>
+</head>
+<body>
+
+<section class="hero bg-white">
+  <div class="container is-max-desktop has-text-centered">
+    <h1 class="title publication-title">Internally Referenced Low-Light Enhancement</h1>
+    
+    <div class="publication-authors">
+      <span class="author-block">Peiyuan He,</span>
+      <span class="author-block">Hainuo Wang,</span>
+      <span class="author-block">Hengxing Liu,</span>
+      <span class="author-block">Mingjia Li,</span>
+      <span class="author-block">Xiaojie Guo<sup>*</sup></span>
+    </div>
+
+    <div class="institution-block">
+      <span>Tianjin University</span><br>
+      <span style="font-size: 0.95rem;"><sup>*</sup>Corresponding Author</span>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-white" style="padding-top: 0;">
+  <div class="container is-max-desktop">
+    <img src="static/images/teaser.png" class="img-fluid" alt="Teaser Figure">
+    <p class="figure-caption">
+      <strong>Figure 1: Internal physical and structural references.</strong> Top: Internal Physical Reference. A local exposure-simulated pseudo-GT provides an internal physical reference for global color and brightness restoration. Bottom: Internal Structural References. Our spectral-domain design provides internal structural references that preserve structures and suppress noise without the blur artifacts caused by spatial misalignment.
+    </p>
+  </div>
+</section>
+
+<section class="section bg-light">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Abstract</h2>
+    <div class="content">
+      <p>
+        Self-supervised low-light image enhancement (LLIE) is highly appealing as it eliminates the reliance on external paired data. However, the lack of external references causes networks to struggle with decoupling entangled illumination, delicate textures, and amplified noise. To resolve this challenge, we propose an <strong>Internally Referenced LLIE framework</strong> that extracts reliable physical and structural references from the degraded input image itself. 
+      </p>
+      <p>
+        First, we introduce a local exposure-simulated scheme to extract a low-frequency pseudo ground-truth. This serves as an internal physical reference to guide global illumination estimation and correct color casts. Second, we propose a dual-domain preservation strategy with spatial and spectral constraints to construct internal structural references. Specifically, an Illumination-Aligned Perceptual loss preserves global structures under illumination shifts, while a Shift-Invariant Spectral Correlation loss captures fine-grained local structures and suppresses high-frequency noise. Finally, we propose a Gain-Adaptive Feature Modulation (GAFM) mechanism to address highly spatially-variant residual noise. Extensive experiments demonstrate that our method achieves state-of-the-art performance, delivering superior noise suppression and textural fidelity.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-white">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Methodology</h2>
+    <div class="content mb-5">
+      <p>Our philosophy is that, although a degraded input image lacks an external normal-light counterpart, it still contains sufficient physical and structural cues to guide the LLIE process. The framework is built upon three core components:</p>
+      <ul>
+        <li><strong>Internal Physical Reference:</strong> A local exposure-simulated scheme featuring robust white balancing and adaptive shadow desaturation extracts a pseudo-GT to guide global color and brightness restoration.</li>
+        <li><strong>Internal Structural References:</strong> A dual-domain collaborative strategy utilizes an Illumination-Aligned Perceptual (IAP) loss to preserve global topology, and a Shift-Invariant Spectral Correlation (SISC) loss to capture fine-grained local textures without inducing spatial blur.</li>
+        <li><strong>Gain-Guided Blind-Spot Denoising:</strong> A Gain-Adaptive Feature Modulation (GAFM) mechanism dynamically translates the self-estimated illumination map into an internal spatial gain prior, enabling spatially-aware denoising.</li>
+      </ul>
+    </div>
+    <img src="static/images/pipeline.png" class="img-fluid" alt="Framework Architecture">
+    <p class="figure-caption">
+      <strong>Figure 2: Overview of our IRLE.</strong> (a) Stage 1: Illumination estimation and structure extraction via a Dual-Domain Collaborative Retinex network, guided by a local exposure-simulated pseudo-GT. (b) Stage 2: Gain-guided blind-spot denoising, which handles spatially-variant noise. (c) The detailed architecture of the Gain-Aware Block. (d) The Gain-Adaptive Feature Modulation (GAFM) module.
+    </p>
+  </div>
+</section>
+
+<section class="section bg-light">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Quantitative Evaluation</h2>
+    <div class="content mb-4">
+      <p>
+        Extensive experiments demonstrate that our internally referenced framework achieves state-of-the-art PSNR and competitive SSIM across multiple standard benchmarks. The table reports the full LOL quantitative comparison from the main paper, including both Normal and GT-Mean metrics.
+      </p>
+    </div>
+    
+    <p class="table-caption">
+      <strong>Table 1: Quantitative comparison on LOL datasets.</strong> Both standard and GT-Mean metrics are reported. The best and second-best results among unsupervised methods are highlighted in bold and underline, respectively.
+    </p>
+    <div class="table-container mb-6">
+      <table class="table is-fullwidth has-text-centered quant-table">
+        <thead>
+          <tr>
+            <th rowspan="3" class="metric-boundary method-head">Method</th>
+            <th colspan="4" class="metric-boundary header-rule">LOLv1</th>
+            <th colspan="4" class="metric-boundary header-rule">LOLv2-Real</th>
+            <th colspan="4" class="header-rule">LOLv2-Synthetic</th>
+          </tr>
+          <tr>
+            <th colspan="2" class="header-rule">Normal</th>
+            <th colspan="2" class="metric-boundary header-rule">GT-Mean</th>
+            <th colspan="2" class="header-rule">Normal</th>
+            <th colspan="2" class="metric-boundary header-rule">GT-Mean</th>
+            <th colspan="2" class="header-rule">Normal</th>
+            <th colspan="2" class="header-rule">GT-Mean</th>
+          </tr>
+          <tr class="metric-name-row">
+            <th>PSNR</th><th>SSIM</th><th>PSNR</th><th class="metric-boundary">SSIM</th>
+            <th>PSNR</th><th>SSIM</th><th>PSNR</th><th class="metric-boundary">SSIM</th>
+            <th>PSNR</th><th>SSIM</th><th>PSNR</th><th>SSIM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="metric-boundary has-text-left method-cell">Zero-DCE (CVPR'20)</td><td>14.86</td><td>0.559</td><td>21.06</td><td class="metric-boundary">0.535</td><td>18.06</td><td>0.574</td><td>20.78</td><td class="metric-boundary">0.542</td><td>17.76</td><td><span class="is-second">0.813</span></td><td>21.50</td><td><span class="is-best">0.849</span></td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">RRDNet (ICME'20)</td><td>11.46</td><td>0.460</td><td>18.96</td><td class="metric-boundary">0.484</td><td>13.96</td><td>0.483</td><td>19.15</td><td class="metric-boundary">0.495</td><td>14.87</td><td>0.657</td><td>18.39</td><td>0.758</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">RUAS (CVPR'21)</td><td>16.41</td><td>0.500</td><td>18.65</td><td class="metric-boundary">0.518</td><td>15.33</td><td>0.488</td><td>19.06</td><td class="metric-boundary">0.510</td><td>13.40</td><td>0.644</td><td>17.79</td><td>0.695</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">EnlightenGAN (TIP'21)</td><td>17.56</td><td>0.665</td><td>21.33</td><td class="metric-boundary">0.649</td><td>18.68</td><td>0.673</td><td>21.04</td><td class="metric-boundary">0.663</td><td>16.49</td><td>0.775</td><td>19.32</td><td>0.823</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">RetinexDIP (TCSVT'21)</td><td>11.67</td><td>0.484</td><td>19.74</td><td class="metric-boundary">0.471</td><td>14.51</td><td>0.521</td><td>19.48</td><td class="metric-boundary">0.487</td><td>16.01</td><td>0.733</td><td>20.12</td><td>0.800</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">SCI (CVPR'22)</td><td>14.78</td><td>0.522</td><td>18.97</td><td class="metric-boundary">0.501</td><td>17.30</td><td>0.534</td><td>19.47</td><td class="metric-boundary">0.509</td><td>15.43</td><td>0.748</td><td>18.64</td><td>0.788</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">PSENet (WACV'23)</td><td>17.50</td><td>0.543</td><td>20.93</td><td class="metric-boundary">0.546</td><td>17.63</td><td>0.531</td><td>20.64</td><td class="metric-boundary">0.550</td><td>16.62</td><td>0.777</td><td>20.67</td><td>0.824</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">PairLIE (CVPR'23)</td><td>19.51</td><td>0.736</td><td>23.17</td><td class="metric-boundary">0.753</td><td>19.89</td><td>0.778</td><td>24.03</td><td class="metric-boundary">0.803</td><td><span class="is-second">19.07</span></td><td>0.797</td><td><span class="is-second">21.68</span></td><td>0.820</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">GDP (CVPR'23)</td><td>15.82</td><td>0.541</td><td>19.09</td><td class="metric-boundary">0.578</td><td>14.40</td><td>0.494</td><td>19.32</td><td class="metric-boundary">0.559</td><td>12.12</td><td>0.497</td><td>15.83</td><td>0.667</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">NeRCo (ICCV'23)</td><td>19.74</td><td>0.743</td><td>22.41</td><td class="metric-boundary">0.755</td><td>19.66</td><td>0.717</td><td>23.63</td><td class="metric-boundary">0.750</td><td>17.59</td><td>0.734</td><td>19.66</td><td>0.752</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">CLIP-LIT (ICCV'23)</td><td>12.39</td><td>0.493</td><td>20.03</td><td class="metric-boundary">0.442</td><td>15.18</td><td>0.529</td><td>19.45</td><td class="metric-boundary">0.468</td><td>16.19</td><td>0.775</td><td>20.75</td><td>0.817</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">CoLIE (ECCV'24)</td><td>13.76</td><td>0.481</td><td>20.37</td><td class="metric-boundary">0.479</td><td>15.08</td><td>0.501</td><td>20.22</td><td class="metric-boundary">0.496</td><td>14.30</td><td>0.654</td><td>19.04</td><td>0.786</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">CLODE (ICLR'25)</td><td>19.60</td><td>0.718</td><td>22.59</td><td class="metric-boundary">0.736</td><td>17.87</td><td>0.681</td><td>22.57</td><td class="metric-boundary">0.703</td><td>17.21</td><td>0.783</td><td>20.63</td><td>0.797</td></tr>
+          <tr><td class="metric-boundary has-text-left method-cell">Li et al. (ICLR'25)</td><td><span class="is-second">19.82</span></td><td><span class="is-second">0.751</span></td><td><span class="is-second">23.97</span></td><td class="metric-boundary"><span class="is-second">0.779</span></td><td><span class="is-second">20.35</span></td><td><span class="is-best">0.795</span></td><td><span class="is-second">26.14</span></td><td class="metric-boundary"><span class="is-best">0.828</span></td><td>17.82</td><td>0.802</td><td>20.78</td><td>0.820</td></tr>
+          <tr class="is-ours">
+            <td class="metric-boundary has-text-left method-cell">Ours</td>
+            <td><span class="is-best">20.60</span></td><td><span class="is-best">0.760</span></td><td><span class="is-best">24.65</span></td><td class="metric-boundary"><span class="is-best">0.788</span></td>
+            <td><span class="is-best">20.72</span></td><td><span class="is-second">0.792</span></td><td><span class="is-best">26.24</span></td><td class="metric-boundary"><span class="is-second">0.826</span></td>
+            <td><span class="is-best">19.62</span></td><td><span class="is-best">0.815</span></td><td><span class="is-best">22.82</span></td><td><span class="is-second">0.833</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="title is-4 mt-6 mb-4">Efficiency Analysis</h3>
+    <p class="table-caption">
+      <strong>Table 2: Computational complexity and performance comparison.</strong> The restoration quality (Normal PSNR) is evaluated on the LOLv1 dataset. Inference time and FPS are measured on 400 x 600 inputs using a single NVIDIA RTX 3090 GPU.
+    </p>
+    <div class="table-container">
+      <table class="table is-fullwidth has-text-centered efficiency-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>PSNR ↑</th>
+            <th>Params (M) ↓</th>
+            <th>MACs (G) ↓</th>
+            <th>RT (ms) ↓</th>
+            <th>FPS ↑</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="has-text-left">GDP (CVPR'23)</td><td>15.82</td><td>552.814</td><td>4872.000</td><td>1336965.00</td><td>0.0007</td></tr>
+          <tr><td class="has-text-left">RRDNet (ICME'20)</td><td>11.46</td><td>0.128</td><td>31.063</td><td>21793.18</td><td>0.0459</td></tr>
+          <tr><td class="has-text-left">RetinexDIP (TCSVT'21)</td><td>11.67</td><td>0.707</td><td>3.414</td><td>11325.17</td><td>0.0883</td></tr>
+          <tr><td class="has-text-left">CoLIE (ECCV'24)</td><td>13.76</td><td>0.133</td><td>8.657</td><td>1187.32</td><td>0.84</td></tr>
+          <tr><td class="has-text-left">Li et al. (ICLR'25)</td><td>19.82</td><td>0.345</td><td>78.730</td><td>295.83</td><td>3.38</td></tr>
+          <tr><td class="has-text-left">NeRCo (ICCV'23)</td><td>19.74</td><td>23.046</td><td>1136.000</td><td>293.67</td><td>3.41</td></tr>
+          <tr><td class="has-text-left">CLIP-LIT (ICCV'23)</td><td>12.39</td><td>0.279</td><td>66.670</td><td>14.53</td><td>68.80</td></tr>
+          <tr><td class="has-text-left">PairLIE (CVPR'23)</td><td>19.51</td><td>0.342</td><td>82.929</td><td>13.69</td><td>73.06</td></tr>
+          <tr><td class="has-text-left">EnlightenGAN (TIP'21)</td><td>17.56</td><td>54.410</td><td>108.878</td><td>5.63</td><td>177.76</td></tr>
+          <tr><td class="has-text-left">PSENet (WACV'23)</td><td>17.50</td><td>0.015</td><td>0.557</td><td>3.76</td><td>265.65</td></tr>
+          <tr><td class="has-text-left">RUAS (CVPR'21)</td><td>16.41</td><td>0.003</td><td>0.795</td><td>3.50</td><td>285.91</td></tr>
+          <tr><td class="has-text-left">Zero-DCE (CVPR'20)</td><td>14.86</td><td>0.079</td><td>19.008</td><td>3.44</td><td>290.81</td></tr>
+          <tr><td class="has-text-left">SCI (CVPR'22)</td><td>14.78</td><td>0.00026</td><td>0.130</td><td>0.32</td><td>3113.86</td></tr>
+          <tr class="is-ours"><td class="has-text-left"><strong>Ours (Stage 1)</strong></td><td><span class="is-best">20.39</span></td><td>0.887</td><td>32.479</td><td>5.09</td><td>196.40</td></tr>
+          <tr class="is-ours"><td class="has-text-left"><strong>Ours (Total)</strong></td><td><span class="is-best">20.60</span></td><td>2.204</td><td>79.139</td><td>36.26</td><td>27.58</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-white">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Qualitative Results</h2>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Zero-DCE.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/RUAS.png" alt="Visual comparison RUAS result" loading="lazy" decoding="async"><div class="grid-caption">(d) RUAS</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/NeRCo.png" alt="Visual comparison NeRCo result" loading="lazy" decoding="async"><div class="grid-caption">(f) NeRCo</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Ours.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 3: Visual comparison on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
+      </p>
+    </div>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Zero-DCE.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/RUAS.png" alt="Visual comparison RUAS result" loading="lazy" decoding="async"><div class="grid-caption">(d) RUAS</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/NeRCo.png" alt="Visual comparison NeRCo result" loading="lazy" decoding="async"><div class="grid-caption">(f) NeRCo</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Li%20et%20al..png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Ours.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 4: Visual comparison on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
+      </p>
+    </div>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 5: More visual comparisons on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
+      </p>
+    </div>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 6: More visual comparisons on LOLv2-Real.</strong> Our method restores accurate global illumination and fine textures, demonstrating robust performance on diverse real-world scenes.
+      </p>
+    </div>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 7: More visual comparisons on LOLv2-Synthetic.</strong> Our internally referenced enhancement effectively suppresses spatially-variant synthetic noise without compromising high-frequency edge details.
+      </p>
+    </div>
+
+    <div class="visual-case">
+      <div class="columns is-multiline is-mobile is-variable is-1">
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
+        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+      </div>
+      <p class="figure-caption">
+        <strong>Figure 8: Visual comparison on a challenging case with severe color cast.</strong> When the original input exhibits extreme color degradation, our internally referenced method can only partially mitigate the color cast. However, compared to competing baselines that severely distort the scene's hue, our method still yields the most natural visual results.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-light">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Luminance Distribution Analysis</h2>
+    <div class="columns is-multiline is-mobile is-variable is-2">
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_CLIP-LIT.png" alt="Luminance distribution comparison with CLIP-LIT on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(a) CLIP-LIT</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_CoLIE.png" alt="Luminance distribution comparison with CoLIE on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(b) CoLIE</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_RetinexDIP.png" alt="Luminance distribution comparison with RetinexDIP on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(c) RetinexDIP</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_RRDNet.png" alt="Luminance distribution comparison with RRDNet on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(d) RRDNet</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_CLIP-LIT.png" alt="Luminance distribution comparison with CLIP-LIT on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(e) CLIP-LIT</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_Li_et_al.png" alt="Luminance distribution comparison with Li et al. on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(f) Li et al.</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_RetinexDIP.png" alt="Luminance distribution comparison with RetinexDIP on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(g) RetinexDIP</div></div>
+      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_RRDNet.png" alt="Luminance distribution comparison with RRDNet on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(h) RRDNet</div></div>
+    </div>
+    <p class="figure-caption mt-2">
+      <strong>Figure 9: Luminance distribution comparisons via kernel density estimation (KDE).</strong> The orange dashed line represents our method, which consistently aligns with the Ground Truth (gray area) across different datasets, whereas competitors show significant deviations.
+    </p>
+  </div>
+</section>
+
+<footer class="footer" style="background-color: #fafafa; padding: 3rem 1.5rem;">
+  <div class="content has-text-centered">
+    <p style="color: #888; font-size: 0.95rem;">
+      This project page is designed for academic presentation. Template visually adapted from <a href="https://github.com/nerfies/nerfies.github.io" style="color: #555; text-decoration: underline;" target="_blank" rel="noopener noreferrer">Nerfies</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
