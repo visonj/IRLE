@@ -102,8 +102,8 @@
     .table th { background-color: transparent; color: #111; font-weight: 700; vertical-align: middle; border-bottom: 2px solid #ddd; }
     .table td { vertical-align: middle; transition: background-color 0.2s; border-bottom: 1px solid #eee; }
     .table tbody tr:hover td { background-color: #f5f8ff; }
-    .quant-table { width: 100%; min-width: 0; font-size: 0.72rem; table-layout: fixed; }
-    .quant-table th, .quant-table td { padding: 0.3rem 0.2rem; white-space: nowrap; }
+    .quant-table { width: 100%; min-width: 0; font-size: 0.82rem; table-layout: fixed; }
+    .quant-table th, .quant-table td { padding: 0.3rem 0.16rem; white-space: nowrap; }
     .quant-table thead th {
       border-bottom: 0 !important;
       position: relative;
@@ -133,15 +133,17 @@
     .efficiency-table th,
     .efficiency-table td { text-align: center !important; }
     .efficiency-table thead th { text-align: center !important; }
+    .efficiency-table th:first-child,
+    .efficiency-table td:first-child { width: 18%; }
     .efficiency-table tbody td:first-child { font-weight: 400; }
     .efficiency-table tbody td.has-text-left { text-align: left !important; }
     .efficiency-table .is-ours td:first-child { font-weight: 700; }
     .is-ours { background-color: #fcfcfc; }
     .is-best { font-weight: 700; color: #000; }
     .is-second { color: #000; font-weight: 400; text-decoration: underline; }
-    .visual-case { margin-bottom: 1.4rem; }
+    .visual-case { margin-bottom: 1.8rem; }
     .visual-case .columns { margin-bottom: -0.55rem; }
-    .visual-case .columns + .columns { margin-top: -0.25rem; }
+    .visual-case .columns + .columns { margin-top: 0.55rem; }
     .visual-case .column { padding-top: 0.12rem; padding-bottom: 0.12rem; }
     .visual-case .grid-item { margin-bottom: 0; }
     .visual-case .grid-caption { margin-top: 0.08rem; line-height: 1.2; }
@@ -437,26 +439,6 @@
         <strong>Figure 7: More visual comparisons on LOLv2-Synthetic.</strong> Our internally referenced enhancement effectively suppresses spatially-variant synthetic noise without compromising high-frequency edge details.
       </p>
     </div>
-
-    <div class="visual-case">
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00754/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <p class="figure-caption">
-        <strong>Figure 8: Visual comparison on a challenging case with severe color cast.</strong> When the original input exhibits extreme color degradation, our internally referenced method can only partially mitigate the color cast. However, compared to competing baselines that severely distort the scene's hue, our method still yields the most natural visual results.
-      </p>
-    </div>
-  </div>
-</section>
 
 <section class="section bg-light">
   <div class="container is-max-desktop">
