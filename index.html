@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -46,6 +46,24 @@
     .author-block a { color: var(--accent-color); transition: color 0.2s; }
     .author-block a:hover { color: #1a4a90; }
     .institution-block { font-size: 1.1rem; color: var(--text-muted); }
+    .publication-links { margin-top: 1.5rem; }
+    .publication-links .button {
+      border-radius: 999px;
+      margin: 0.25rem;
+      padding-left: 1.2rem;
+      padding-right: 1.2rem;
+      font-weight: 600;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+    .publication-links .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+      background-color: var(--accent-color);
+    }
+    .publication-links .button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.14);
+    }
 
     /* Content Layout */
     .section { padding: 4rem 1.5rem; }
@@ -148,6 +166,8 @@
     .visual-case .grid-item { margin-bottom: 0; }
     .visual-case .grid-caption { margin-top: 0.08rem; line-height: 1.2; }
     .visual-case .figure-caption { margin-top: 0.65rem; }
+    .analysis-grid .grid-caption { margin-top: 0.35rem; }
+    .analysis-figure { margin-top: 2.25rem; }
   </style>
 </head>
 <body>
@@ -165,8 +185,23 @@
     </div>
 
     <div class="institution-block">
-      <span>Tianjin University</span><br>
+      <span>Tianjin University, Tianjin, China</span><br>
       <span style="font-size: 0.95rem;"><sup>*</sup>Corresponding Author</span>
+    </div>
+
+    <div class="publication-links">
+      <a class="button is-dark" href="#" aria-label="Paper link">
+        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+        <span>Paper</span>
+      </a>
+      <a class="button is-dark" href="#" aria-label="Code link">
+        <span class="icon"><i class="fab fa-github"></i></span>
+        <span>Code</span>
+      </a>
+      <a class="button is-dark" href="#" aria-label="arXiv link">
+        <span class="icon"><i class="fas fa-scroll"></i></span>
+        <span>arXiv</span>
+      </a>
     </div>
   </div>
 </section>
@@ -196,7 +231,7 @@
 
 <section class="section bg-white">
   <div class="container is-max-desktop">
-    <h2 class="section-title">Methodology</h2>
+    <h2 class="section-title">Method Overview</h2>
     <div class="content mb-5">
       <p>Our philosophy is that, although a degraded input image lacks an external normal-light counterpart, it still contains sufficient physical and structural cues to guide the LLIE process. The framework is built upon three core components:</p>
       <ul>
@@ -209,6 +244,32 @@
     <p class="figure-caption">
       <strong>Figure 2: Overview of our IRLE.</strong> (a) Stage 1: Illumination estimation and structure extraction via a Dual-Domain Collaborative Retinex network, guided by a local exposure-simulated pseudo-GT. (b) Stage 2: Gain-guided blind-spot denoising, which handles spatially-variant noise. (c) The detailed architecture of the Gain-Aware Block. (d) The Gain-Adaptive Feature Modulation (GAFM) module.
     </p>
+  </div>
+</section>
+
+
+<section class="section bg-light">
+  <div class="container is-max-desktop">
+    <h2 class="section-title">Theoretical Analysis</h2>
+    <div class="content mb-4">
+      <p>
+        We further analyze why internally referenced supervision improves both illumination recovery and structural preservation. The luminance statistics show whether an enhanced image follows a natural normal-light distribution, while the frequency-band visualization explains why the spectral constraint can preserve texture without inheriting amplified noise.
+      </p>
+    </div>
+    <div class="columns is-multiline is-mobile is-variable is-2 analysis-grid">
+      <div class="column is-one-third-desktop is-full-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_CLIP-LIT.png" alt="Luminance distribution comparison with CLIP-LIT on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(a) CLIP-LIT (LOLv1)</div></div>
+      <div class="column is-one-third-desktop is-full-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_RetinexDIP.png" alt="Luminance distribution comparison with RetinexDIP on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(b) RetinexDIP (LOLv1)</div></div>
+      <div class="column is-one-third-desktop is-full-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_Li_et_al.png" alt="Luminance distribution comparison with Li et al. on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(c) Li et al. (LOLv2-Real)</div></div>
+    </div>
+    <p class="figure-caption mt-2">
+      <strong>Figure 4: Luminance distribution comparisons via kernel density estimation (KDE).</strong> The orange dashed line represents our method, which consistently aligns with the Ground Truth distribution, whereas competitors show noticeable distribution shifts.
+    </p>
+    <div class="analysis-figure">
+      <img src="static/images/band_vis.png" class="img-fluid" alt="Cross-frequency correlation analysis">
+      <p class="figure-caption">
+        <strong>Figure 5: Cross-Frequency Correlation (CFC) analysis.</strong> The CFC matrices reveal that mid-frequency bands preserve stable structural correlations between low-light and normal-light images, while extreme low- and high-frequency bands are more affected by illumination degradation and amplified noise. This motivates SISC to retain reliable texture bands and suppress noise-dominated components.
+      </p>
+    </div>
   </div>
 </section>
 
@@ -281,11 +342,11 @@
         <thead>
           <tr>
             <th>Method</th>
-            <th>PSNR ↑</th>
-            <th>Params (M) ↓</th>
-            <th>MACs (G) ↓</th>
-            <th>RT (ms) ↓</th>
-            <th>FPS ↑</th>
+            <th>PSNR &uarr;</th>
+            <th>Params (M) &darr;</th>
+            <th>MACs (G) &darr;</th>
+            <th>RT (ms) &darr;</th>
+            <th>FPS &uarr;</th>
           </tr>
         </thead>
         <tbody>
@@ -313,7 +374,6 @@
 <section class="section bg-white">
   <div class="container is-max-desktop">
     <h2 class="section-title">Qualitative Results</h2>
-
     <div class="visual-case">
       <div class="columns is-multiline is-mobile is-variable is-1">
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
@@ -327,30 +387,6 @@
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Ours.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
       </div>
-      <p class="figure-caption">
-        <strong>Figure 3: Visual comparison on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
-      </p>
-    </div>
-
-    <div class="visual-case">
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Zero-DCE.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/RUAS.png" alt="Visual comparison RUAS result" loading="lazy" decoding="async"><div class="grid-caption">(d) RUAS</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/NeRCo.png" alt="Visual comparison NeRCo result" loading="lazy" decoding="async"><div class="grid-caption">(f) NeRCo</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Li%20et%20al..png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/Ours.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis2/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <p class="figure-caption">
-        <strong>Figure 4: Visual comparison on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
-      </p>
-    </div>
-
-    <div class="visual-case">
       <div class="columns is-multiline is-mobile is-variable is-1">
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
@@ -376,88 +412,12 @@
         <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
       </div>
       <p class="figure-caption">
-        <strong>Figure 5: More visual comparisons on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
+        <strong>Figure 3: Visual comparisons on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
       </p>
     </div>
-
-    <div class="visual-case">
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00721/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2real_normal00736/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <p class="figure-caption">
-        <strong>Figure 6: More visual comparisons on LOLv2-Real.</strong> Our method restores accurate global illumination and fine textures, demonstrating robust performance on diverse real-world scenes.
-      </p>
-    </div>
-
-    <div class="visual-case">
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r108301e3t/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv2syn_r13073518t/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <p class="figure-caption">
-        <strong>Figure 7: More visual comparisons on LOLv2-Synthetic.</strong> Our internally referenced enhancement effectively suppresses spatially-variant synthetic noise without compromising high-frequency edge details.
-      </p>
-    </div>
-
-<section class="section bg-light">
-  <div class="container is-max-desktop">
-    <h2 class="section-title">Luminance Distribution Analysis</h2>
-    <div class="columns is-multiline is-mobile is-variable is-2">
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_CLIP-LIT.png" alt="Luminance distribution comparison with CLIP-LIT on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(a) CLIP-LIT</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_CoLIE.png" alt="Luminance distribution comparison with CoLIE on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(b) CoLIE</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_RetinexDIP.png" alt="Luminance distribution comparison with RetinexDIP on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(c) RetinexDIP</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv1_vs_RRDNet.png" alt="Luminance distribution comparison with RRDNet on LOLv1" loading="lazy" decoding="async"><div class="grid-caption">(d) RRDNet</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_CLIP-LIT.png" alt="Luminance distribution comparison with CLIP-LIT on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(e) CLIP-LIT</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_Li_et_al.png" alt="Luminance distribution comparison with Li et al. on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(f) Li et al.</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_RetinexDIP.png" alt="Luminance distribution comparison with RetinexDIP on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(g) RetinexDIP</div></div>
-      <div class="column is-3-desktop is-half-mobile grid-item"><img src="static/images/luminance/lum_1v1_LOLv2real_vs_RRDNet.png" alt="Luminance distribution comparison with RRDNet on LOLv2-Real" loading="lazy" decoding="async"><div class="grid-caption">(h) RRDNet</div></div>
-    </div>
-    <p class="figure-caption mt-2">
-      <strong>Figure 9: Luminance distribution comparisons via kernel density estimation (KDE).</strong> The orange dashed line represents our method, which consistently aligns with the Ground Truth (gray area) across different datasets, whereas competitors show significant deviations.
-    </p>
   </div>
 </section>
+
 
 </body>
 </html>
