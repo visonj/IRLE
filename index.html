@@ -262,7 +262,7 @@
     .efficiency-table td { text-align: center !important; }
     .efficiency-table thead th { text-align: center !important; }
     .efficiency-table th:first-child,
-    .efficiency-table td:first-child { width: 18%; }
+    .efficiency-table td:first-child { width: 20%; }
     .efficiency-table tbody td:first-child { font-weight: 400; }
     .efficiency-table tbody td.has-text-left { text-align: left !important; }
     .efficiency-table .is-ours td:first-child { font-weight: 700; }
@@ -276,6 +276,34 @@
     .visual-case .grid-item { margin-bottom: 0; }
     .visual-case .grid-caption { margin-top: 0.08rem; line-height: 1.2; }
     .visual-case .figure-caption { margin-top: 0.65rem; }
+    .qualitative-composite-wrap {
+      position: relative;
+      width: 100%;
+      line-height: 0;
+    }
+    .qualitative-composite {
+      display: block;
+      border-radius: 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+    .qualitative-composite-labels {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .qualitative-composite-labels text {
+      font-family: 'Noto Sans', sans-serif;
+      font-size: 32px;
+      font-weight: 400;
+      fill: #4b5563;
+      text-anchor: middle;
+      dominant-baseline: hanging;
+    }
     .analysis-grid .grid-caption { margin-top: 0.35rem; }
     .analysis-figure { margin-top: 2.25rem; }
 
@@ -498,49 +526,50 @@
 </section>
 
 <section class="section bg-white">
-  <div class="container is-max-desktop">
-    <h2 class="section-title">Qualitative Results</h2>
-    <div class="visual-case">
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Zero-DCE.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/RUAS.png" alt="Visual comparison RUAS result" loading="lazy" decoding="async"><div class="grid-caption">(d) RUAS</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/NeRCo.png" alt="Visual comparison NeRCo result" loading="lazy" decoding="async"><div class="grid-caption">(f) NeRCo</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/Ours.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/visual_comparison/vis1/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
+    <div class="container is-max-desktop">
+      <h2 class="section-title">Qualitative Results</h2>
+      <div class="visual-case">
+        <div class="qualitative-composite-wrap">
+          <img src="static/images/qualitative_results_lolv1_composite.jpg" class="img-fluid qualitative-composite" alt="Qualitative visual comparisons on LOLv1, including three cases and ten methods for each case" loading="lazy" decoding="async">
+          <svg class="qualitative-composite-labels" viewBox="0 0 2200 2628" preserveAspectRatio="none" aria-hidden="true">
+            <text x="233" y="497">(a) Input</text>
+            <text x="667" y="497">(b) Zero-DCE</text>
+            <text x="1101" y="497">(c) EnlightenGAN</text>
+            <text x="1535" y="497">(d) RUAS</text>
+            <text x="1969" y="497">(e) SCI</text>
+            <text x="233" y="1040">(f) NeRCo</text>
+            <text x="667" y="1040">(g) CLODE</text>
+            <text x="1101" y="1040">(h) Li et al.</text>
+            <text x="1535" y="1040">(i) Ours</text>
+            <text x="1969" y="1040">(j) GT</text>
+
+            <text x="233" y="1429">(a) Input</text>
+            <text x="667" y="1429">(b) Zero-DCE</text>
+            <text x="1101" y="1429">(c) EnlightenGAN</text>
+            <text x="1535" y="1429">(d) PairLIE</text>
+            <text x="1969" y="1429">(e) SCI</text>
+            <text x="233" y="1802">(f) CoLIE</text>
+            <text x="667" y="1802">(g) CLODE</text>
+            <text x="1101" y="1802">(h) Li et al.</text>
+            <text x="1535" y="1802">(i) Ours</text>
+            <text x="1969" y="1802">(j) GT</text>
+
+            <text x="233" y="2191">(a) Input</text>
+            <text x="667" y="2191">(b) Zero-DCE</text>
+            <text x="1101" y="2191">(c) EnlightenGAN</text>
+            <text x="1535" y="2191">(d) PairLIE</text>
+            <text x="1969" y="2191">(e) SCI</text>
+            <text x="233" y="2564">(f) CoLIE</text>
+            <text x="667" y="2564">(g) CLODE</text>
+            <text x="1101" y="2564">(h) Li et al.</text>
+            <text x="1535" y="2564">(i) Ours</text>
+            <text x="1969" y="2564">(j) GT</text>
+          </svg>
+        </div>
+        <p class="figure-caption">
+          <strong>Figure 3: Visual comparisons on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
+        </p>
       </div>
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_22/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <div class="columns is-multiline is-mobile is-variable is-1">
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/input.png" alt="Visual comparison input" loading="lazy" decoding="async"><div class="grid-caption">(a) Input</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/zero_dce.png" alt="Visual comparison Zero-DCE result" loading="lazy" decoding="async"><div class="grid-caption">(b) Zero-DCE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/EnlightenGAN.png" alt="Visual comparison EnlightenGAN result" loading="lazy" decoding="async"><div class="grid-caption">(c) EnlightenGAN</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/PairLIE.png" alt="Visual comparison PairLIE result" loading="lazy" decoding="async"><div class="grid-caption">(d) PairLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/SCI.png" alt="Visual comparison SCI result" loading="lazy" decoding="async"><div class="grid-caption">(e) SCI</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/CoLIE.png" alt="Visual comparison CoLIE result" loading="lazy" decoding="async"><div class="grid-caption">(f) CoLIE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/CLODE.png" alt="Visual comparison CLODE result" loading="lazy" decoding="async"><div class="grid-caption">(g) CLODE</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/Li_et_al.png" alt="Visual comparison Li et al. result" loading="lazy" decoding="async"><div class="grid-caption">(h) Li et al.</div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/ours_new.png" alt="Visual comparison result from our method" loading="lazy" decoding="async"><div class="grid-caption"><strong>(i) Ours</strong></div></div>
-        <div class="column is-one-fifth-desktop is-half-mobile grid-item"><img src="static/images/Selected_Paper_Cases/LOLv1_669/GT.png" alt="Visual comparison ground truth" loading="lazy" decoding="async"><div class="grid-caption">(j) GT</div></div>
-      </div>
-      <p class="figure-caption">
-        <strong>Figure 3: Visual comparisons on LOLv1.</strong> Existing methods often exhibit color casts or lose delicate details due to over-smoothing. Our method maintains natural colors and effectively removes spatially-variant noise while preserving structures.
-      </p>
-    </div>
   </div>
 </section>
 
